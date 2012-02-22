@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!-- Industrial background by @erikjmoller, emoller@opera.com -->
+<svg viewBox="0 0 2880 1800" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+	<defs>
+		<style>
+			circle {
+				fill: black;
+				stroke-width: 1;
+				stroke: #111;
+			}
+		</style>
+		<pattern id="pat" patternUnits="userSpaceOnUse" viewBox="0 0 16 16" width="27" height="27">
+			<circle cx="8" cy="8" r="4"/>
+			<circle cx="16" cy="16" r="4"/>
+			<circle cx="0" cy="0" r="4"/>
+			<circle cx="0" cy="16" r="4"/>
+			<circle cx="16" cy="0" r="4"/>
+		</pattern>
+		<radialGradient id="grad" gradientUnits="userSpaceOnUse" gradientTransform="rotate(-40) translate(0, 1700) scale(2,1)" cx="0" cy="0" r="1000" fx="0" fy="0">
+			<stop offset="0%" stop-color="#555"/>
+			<stop offset="20%" stop-color="#444"/>
+			<stop offset="40%" stop-color="#333"/>
+			<stop offset="100%" stop-color="#111"/>
+		</radialGradient>
+	</defs>
+	<rect fill="url(#grad)" x="0" y="0" width="2880" height="1800"/>
+	<rect fill="url(#pat)" x="0" y="0" width="2880" height="1800"/>
+</svg>

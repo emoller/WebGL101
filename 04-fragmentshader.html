@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+	<canvas id='c' width='900' height='900'></canvas>
+	<script src='webgl-utils.js'></script>
+	<script id='vshader' type='x-shader'>
+		attribute vec2 aVertexPosition;
+		void main() {
+			gl_Position = vec4(aVertexPosition, 0, 1);
+		}
+	</script>
+	<script id='fshader' type='x-shader'>
+	#ifdef GL_FRAGMENT_PRECISION_HIGH
+		precision highp float;
+	#else
+		precision mediump float;
+	#endif
+		precision mediump int;
+		uniform vec2 uCanvasSize;
+		uniform vec2 uOffset;
+		uniform float uScale;
+
+		vec4 calc(vec2 texCoord) {
+			float x = 0.0;
+			float y = 0.0;
+			float v = 10000.0;
+			float j = 10000.0;
+			for (int iteration = 0; iteration < 100; ++iteration) {
+				float xtemp = x*x-y*y+texCoord.x;
+				y = 2.0*x*y+texCoord.y;
+				x = xtemp;
+				v = min(v, abs(x*x+y*y));
+				j = min(j, abs(x*y));
+				if (x*x+y*y >= 8.0) {
+					float d = (float(iteration) - (log(log(sqrt(x*x+y*y))) / log(2.0))) / 50.0;
+					v = (1.0 - v) / 2.0;
+					j = (1.0 - j) / 2.0;
+					return vec4(d+j,d,d+v,1);
+				}
+			}
+			return vec4(0,0,0,1);
+		}
+
+		void main() {
+			vec2 texCoord = (gl_FragCoord.xy / uCanvasSize.xy) * 2.0 - vec2(1.0,1.0);
+			texCoord = texCoord * uScale + uOffset;
+			gl_FragColor = calc(texCoord);
+		}
+	</script>
+	<script>
+		var c = document.getElementById('c');
+		var gl = c.getContext('experimental-webgl');
+		var offset = [-0.5, 0];
+		var scale = 1.35;
+		var iv = null;
+		var actions = {};
+		var keyMappings = { '37' : 'panleft', '38' : 'panup', '39' : 'panright', '40' : 'pandown',
+							'90' : 'zoomin', '88' : 'zoomout' };
+		for (var k in keyMappings) {
+			actions[keyMappings[k]] = false;
+		}
+		var vertexPosBuffer = screenQuad();
+
+		var vs = document.getElementById('vshader').textContent;
+		var fs = document.getElementById('fshader').textContent;
+		var program = createProgram(vs,fs);
+		gl.useProgram(program);
+		program.vertexPosAttrib = gl.getAttribLocation(program, 'aVertexPosition');
+		program.canvasSizeUniform = gl.getUniformLocation(program, 'uCanvasSize');
+		program.offsetUniform = gl.getUniformLocation(program, 'uOffset');
+		program.scaleUniform = gl.getUniformLocation(program, 'uScale');
+		gl.enableVertexAttribArray(program.vertexPosArray);
+		gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+		window.onkeydown = function(e) {
+			var kc = e.keyCode.toString();
+			if (keyMappings.hasOwnProperty(kc)) {
+				actions[keyMappings[kc]] = true;
+				if (!iv) {
+					iv = setInterval('draw();', 16);
+				}
+			}
+		};
+
+		window.onkeyup = function(e) {
+			var kc = e.keyCode.toString();
+			if (keyMappings.hasOwnProperty(kc)) {
+				actions[keyMappings[kc]] = false;
+			}
+			for (var j in keyMappings) {
+				if (actions[keyMappings[j]]) {
+					return;
+				}
+			}
+			clearInterval(iv);
+			iv = null;
+		};
+
+		function draw() {
+			offset[0] += -(actions.panleft ? scale / 25 : 0) + (actions.panright ? scale / 25 : 0);
+			offset[1] += -(actions.pandown ? scale / 25 : 0) + (actions.panup ? scale / 25 : 0);
+			scale = scale * (actions.zoomin ? 0.975 : 1.0) / (actions.zoomout ? 0.975 : 1.0);
+			gl.uniform2f(program.canvasSizeUniform, c.width, c.height);
+			gl.uniform2f(program.offsetUniform, offset[0], offset[1]);
+			gl.uniform1f(program.scaleUniform, scale);
+			gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
+		}
+
+		draw();
+	</script>
+</html>

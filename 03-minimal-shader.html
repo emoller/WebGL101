@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<canvas id='c' width='400' height='400'></canvas>
+	<script src='webgl-utils.js'></script>
+	<script id='vshader' type='x-shader'>
+		attribute vec2 aVertexPosition;
+		varying vec2 vTexCoord;
+		uniform vec2 uOffset;
+		void main() {
+			vTexCoord = aVertexPosition + uOffset;
+			gl_Position = vec4(aVertexPosition, 0, 1);
+		}
+	</script>
+	<script id='fshader' type='x-shader'>
+		precision mediump float;
+		varying vec2 vTexCoord;
+		void main() {
+			gl_FragColor = vec4(vTexCoord, 0, 1);
+		}
+	</script>
+	<script>
+		var c = document.getElementById('c');
+		var gl = c.getContext('experimental-webgl');
+		var offset = [1, 1];
+		var vertexPosBuffer = screenQuad();
+
+		var vs = document.getElementById('vshader').textContent;
+		var fs = document.getElementById('fshader').textContent;
+		var program = createProgram(vs,fs);
+		gl.useProgram(program);
+		program.vertexPosAttrib = gl.getAttribLocation(program, 'aVertexPosition');
+		program.offsetUniform = gl.getUniformLocation(program, 'uOffset');
+		gl.enableVertexAttribArray(program.vertexPosArray);
+		gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, false, 0, 0);
+		gl.uniform2f(program.offsetUniform, offset[0], offset[1]);
+		gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);
+	</script>
+</html>

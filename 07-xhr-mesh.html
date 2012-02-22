@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+	<canvas id='c' width='400' height='400'></canvas>
+	<script src='vector-math.js'></script>
+	<script src='webgl-utils.js'></script>
+	<script src='mesh.js'></script>
+	<script>
+		var c = document.getElementById('c');
+		var gl = c.getContext('experimental-webgl');
+		var mesh = new Mesh();
+		mesh.load('meshes/torus.json', function() { mesh.draw(); });
+	</script>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<canvas id='c' width='900' height='900'></canvas>
+	<script src='webgl-utils.js'></script>
+	<script src='mesh.js'></script>
+	<script src='vector-math.js'></script>
+	<script>
+		var c = document.getElementById('c');
+		var gl = c.getContext('experimental-webgl');
+		gl.enable(gl.DEPTH_TEST);
+		gl.clearColor(0,0,0,1);
+
+		function DAGNode(ch) {
+			this.local = new Matrix4x3();
+			this.children = ch ? ch : [];
+		}
+
+		DAGNode.prototype = {
+			draw : function() {
+				pushModelMatrix().multiply(this.local);
+				for (var c in this.children) {
+					this.children[c].draw();
+				}
+				popModelMatrix();
+			}
+		};
+
+		function Geometry(mesh) {
+			this.mesh = mesh;
+		}
+
+		Geometry.prototype = {
+			draw : function() {
+				this.mesh.draw();
+			}
+		};
+
+		Geometry.prototype.prototype = DAGNode.prototype;
+
+		var mesh = new Mesh();
+		var z = 0;
+		var rot = new Matrix4x3();
+		var camera = new Matrix4x3();
+
+		var spinNode = new DAGNode([new Geometry(mesh)]);
+		var children = [];
+		for (var x = -2; x <= 2; x += 2) {
+			for (var y = -2; y <= 2; y += 2) {
+				var newNode = new DAGNode([spinNode]);
+				newNode.local.d[12] = x;
+				newNode.local.d[13] = y;
+				children[children.length] = newNode;
+			}
+		}
+		var scene = new DAGNode(children);
+
+		function draw() {
+			requestAnimationFrame(draw, c);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			spinNode.local.makeRotate(z,1,0,0);
+			spinNode.local.multiply(rot.makeRotate(z,0,1,0));
+			spinNode.local.multiply(rot.makeRotate(z,0,0,1));
+			scene.local.makeRotate(z,0,1,0);
+			camera.d[14] = 8 + Math.sin(z);
+			viewMatrix().makeInverseRigidBody(camera);
+			scene.draw();
+			z += 0.01;
+		}
+
+		mesh.load('meshes/yellow-cube3.json', draw);
+	</script>
+</html>

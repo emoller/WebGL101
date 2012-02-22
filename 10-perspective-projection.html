@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<canvas id='c' width='900' height='900'></canvas>
+	<script src='webgl-utils.js'></script>
+	<script src='mesh.js'></script>
+	<script src='vector-math.js'></script>
+	<script>
+		var c = document.getElementById('c');
+		var gl = c.getContext('experimental-webgl');
+		gl.enable(gl.DEPTH_TEST);
+		gl.clearColor(0,0,0,1);
+		var mesh = new Mesh();
+		var z = 0;
+		var rot = new Matrix4x3();
+
+		function draw() {
+			requestAnimationFrame(draw, c);
+			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			modelMatrix().makeRotate(z,1,0,0);
+			modelMatrix().multiply(rot.makeRotate(z,0,1,0));
+			modelMatrix().multiply(rot.makeRotate(z,0,0,1));
+			modelMatrix().d[14] = -3;
+			mesh.draw();
+			z += 0.01;
+		}
+
+		mesh.load('meshes/yellow-cube2.json', draw);
+	</script>
+</html>
