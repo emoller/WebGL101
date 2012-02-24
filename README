@@ -17,3 +17,15 @@ http://emoller.github.com/WebGL101/14-real-mesh.html
 The two slides from the video are available at
 http://emoller.github.com/WebGL101/documents/opengl-timeline.html
 http://emoller.github.com/WebGL101/documents/programmable-pipeline.html
+
+The WebGL Reference Card is available at
+http://www.khronos.org/files/webgl/webgl-reference-card-1_0.pdf
+
+The WebGL Specification is available at
+https://www.khronos.org/registry/webgl/specs/1.0/
+
+The Odin demo mentioned in the video is available at
+https://github.com/operasoftware/Odin
+
+The Emberwind game mentioned in the video is available at
+https://github.com/operasoftware/Emberwind
