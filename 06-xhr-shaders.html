@@ -12,7 +12,7 @@
 			gl.useProgram(program);
 			program.vertexPosAttrib = gl.getAttribLocation(program, 'aVertexPosition');
 			program.offsetUniform = gl.getUniformLocation(program, 'uOffset');
-			gl.enableVertexAttribArray(program.vertexPosArray);
+			gl.enableVertexAttribArray(program.vertexPosAttrib);
 			gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, false, 0, 0);
 			gl.uniform2f(program.offsetUniform, offset[0], offset[1]);
 			gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertexPosBuffer.numItems);

@@ -29,7 +29,7 @@
 		gl.useProgram(program);
 		program.vertexPosAttrib = gl.getAttribLocation(program, 'aVertexPosition');
 		program.samplerUniform = gl.getUniformLocation(program, 'uSampler');
-		gl.enableVertexAttribArray(program.vertexPosArray);
+		gl.enableVertexAttribArray(program.vertexPosAttrib);
 		gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, false, 0, 0);
 		var texture = gl.createTexture();
 		var img = new Image();

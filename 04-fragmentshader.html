@@ -68,7 +68,7 @@
 		program.canvasSizeUniform = gl.getUniformLocation(program, 'uCanvasSize');
 		program.offsetUniform = gl.getUniformLocation(program, 'uOffset');
 		program.scaleUniform = gl.getUniformLocation(program, 'uScale');
-		gl.enableVertexAttribArray(program.vertexPosArray);
+		gl.enableVertexAttribArray(program.vertexPosAttrib);
 		gl.vertexAttribPointer(program.vertexPosAttrib, vertexPosBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
 		window.onkeydown = function(e) {
