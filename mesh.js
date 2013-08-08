@@ -90,12 +90,12 @@ function Mesh() {
 			gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexPosBuffer);
 			gl.vertexAttribPointer(program.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
-			if (program.vertexNormalAttribute !== null) {
+			if (program.vertexNormalAttribute !== -1) {
 				gl.enableVertexAttribArray(program.vertexNormalAttribute);
 				gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexNormalBuffer);
 				gl.vertexAttribPointer(program.vertexNormalAttribute, 3, gl.FLOAT, false, 0, 0);
 			}
-			if (program.vertexTextureCoordAttribute !== null) {
+			if (program.vertexTextureCoordAttribute !== -1) {
 				gl.enableVertexAttribArray(program.vertexTextureCoordAttribute);
 				gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexTextureCoordBuffer);
 				gl.vertexAttribPointer(program.vertexTextureCoordAttribute, 2, gl.FLOAT, false, 0, 0);
